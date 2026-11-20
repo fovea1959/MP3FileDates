@@ -60,11 +60,10 @@ def apply_file_attrs(attrs):
 
 
 def main():
-    ATTR_FILE_NAME = ".saved-file-attrs"
-
     parser = argparse.ArgumentParser(
         "Save and restore file attributes in a directory tree"
     )
+    parser.add_argument('--file', required=True)
     subparsers = parser.add_subparsers(dest="mode", help="Select the mode of operation")
     save_parser = subparsers.add_parser(
         "save", help="Save the attributes of files in the directory tree"
@@ -76,11 +75,11 @@ def main():
     args = parser.parse_args()
 
     if args.mode == "save":
-        attr_file = open(ATTR_FILE_NAME, "w")
+        attr_file = open(args.file, "w")
         attrs = collect_file_attrs(args.directory)
         json.dump(attrs, attr_file, indent=2)
     elif args.mode == "restore":
-        if not os.path.exists(ATTR_FILE_NAME):
+        if not os.path.exists(args.file):
             print(
                 "Saved attributes file '%s' not found" % ATTR_FILE_NAME, file=sys.stderr
             )
